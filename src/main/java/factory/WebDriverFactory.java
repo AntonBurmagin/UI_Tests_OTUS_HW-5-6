@@ -9,7 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class WebDriverFactory {
-    private String browser = System.getProperty("browser");
+    private String browser = System.getProperty("browser").toLowerCase().trim();
 
     public WebDriver create(String...optionsArguments) {
         return switch (browser) {
@@ -20,7 +20,7 @@ public class WebDriverFactory {
     }
 
     public WebDriver create(String webDriverName, String...optionsArguments) {
-        browser = webDriverName;
+        browser = webDriverName.toLowerCase().trim();
         return create(optionsArguments);
     }
 

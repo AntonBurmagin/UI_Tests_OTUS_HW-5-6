@@ -21,7 +21,7 @@ Set to debug or trace if log4j initialization is failing. -->
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="${LOG_PATTERN}" />
         </Console>
-        <File name="file" fileName="src/test/logs/log.log" append="false">
+        <File name="file" fileName="src/test/logs/log.log" append="true">
             <PatternLayout pattern="${LOG_PATTERN}" />
         </File>
     </Appenders>
