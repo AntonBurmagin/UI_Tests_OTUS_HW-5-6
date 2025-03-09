@@ -1,9 +1,8 @@
 package data;
 
-import components.SelectLanguage;
+import components.formgroups.SelectLanguageFormGroup;
 import org.openqa.selenium.WebElement;
 
-import java.util.Map;
 import java.util.Scanner;
 
 public class User {
@@ -14,7 +13,7 @@ public class User {
     private String birthdate;
     private WebElement languageLevel;
 
-    public User(String name, String email, String birthdate, SelectLanguage selLang) {
+    public User(String name, String email, String birthdate, SelectLanguageFormGroup selLang) {
         this.name = name;
         this.email = email;
         this.birthdate = birthdate;
@@ -27,7 +26,7 @@ public class User {
         confirmPass = input.nextLine();
     }
 
-    public User(String name, String email, String pass, String confPass, String birthdate, SelectLanguage selLang) {
+    public User(String name, String email, String pass, String confPass, String birthdate, SelectLanguageFormGroup selLang) {
         this.name = name;
         this.email = email;
         this.birthdate = birthdate;
@@ -54,6 +53,10 @@ public class User {
 
     public String getBirthdate() {
         return birthdate;
+    }
+
+    public WebElement getLanguageLevel(){
+        return languageLevel;
     }
 
     public String getLanguageLevelText() {

@@ -1,36 +1,35 @@
-package components;
+package components.formgroups;
 
 import annotations.Component;
+import components.AbsComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 
 @Component("id:::language_level")
-public class SelectLanguage extends AbsComponent {
+public class SelectLanguageFormGroup extends FormGroup {
     private WebElement selectLanguage = null;
     private List<WebElement> options;
 
 
-    public SelectLanguage(WebDriver driver) {
-        super(driver);
-    }
-
-    public void initSelectLanguage(WebDriver driver) {
+    public SelectLanguageFormGroup(WebDriver driver) {
+        super(driver, By.cssSelector(".form-group:has(#language_level)"));
         selectLanguage = driver.findElement(getComponentBy());
         options = selectLanguage.findElements(By.cssSelector("option:not([disabled])"));
+    }
+    
+
+    public void setOption(WebElement option){
+        selectLanguage.sendKeys(option.getText());
     }
 
     public void setRandomOption(){
         Random random = new Random();
         int randomIndex = random.nextInt(options.size());
-        selectLanguage.sendKeys(options.get(randomIndex).getText());
+        setOption(options.get(randomIndex));
     }
 
     public WebElement getRandomOption(){
@@ -38,6 +37,8 @@ public class SelectLanguage extends AbsComponent {
         int randomIndex = random.nextInt(options.size());
         return options.get(randomIndex);
     }
+
+
 
 
 }

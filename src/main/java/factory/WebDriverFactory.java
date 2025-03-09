@@ -19,10 +19,6 @@ public class WebDriverFactory {
         };
     }
 
-    public WebDriver create(String webDriverName, String...optionsArguments) {
-        browser = webDriverName.toLowerCase().trim();
-        return create(optionsArguments);
-    }
 
     public void webDriverManagerSetup(){
         switch (browser) {

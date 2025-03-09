@@ -1,20 +1,18 @@
 package registrationpage.optionsfree;
 
-import components.SelectLanguage;
+import components.formgroups.SelectLanguageFormGroup;
 import data.User;
 import factory.WebDriverFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import pages.RegistrationPage;
-
-import java.util.List;
 
 public class OptionsFree_Test {
     private static final WebDriverFactory webDriverFactory = new WebDriverFactory();
     private WebDriver driver = null;
+    private static SelectLanguageFormGroup selectLang;
+    private static User user;
+    private static WebDriver driverBeforeAll;
 
 
     @BeforeAll
@@ -22,46 +20,51 @@ public class OptionsFree_Test {
         webDriverFactory.webDriverManagerSetup();
     }
 
+    @BeforeAll
+    public static void initFeatures() {
+        driverBeforeAll = webDriverFactory.create("--headless");
+        RegistrationPage page = new RegistrationPage(driverBeforeAll);
+        page.open();
+
+        selectLang = new SelectLanguageFormGroup(driverBeforeAll);
+        user = new User("Anton",
+                "Antonio_is_SanAntonio@gmail.com",
+                "1",
+                "1",
+                "09-02-1994",
+                selectLang);
+    }
+
     @BeforeEach
     public void createDriver(){
         driver = webDriverFactory.create();
     }
 
+//    @Test
+//    public void labelsTextTest(){
+//        RegistrationPage page = new RegistrationPage(driver);
+//        page.open();
+//
+//        page.formGroupLabelTextShouldBeEqual(page.getUsernameInputFormGroup(), "Имя пользователя:");
+//        page.formGroupLabelTextShouldBeEqual(page.getEmailInputFormGroup(), "Электронная почта:");
+//        page.formGroupLabelTextShouldBeEqual(page.getPasswordInputFormGroup(), "Пароль:");
+//        page.formGroupLabelTextShouldBeEqual(page.getConfirmPasswordInputFormGroup(), "Подтвердите пароль:");
+//        page.formGroupLabelTextShouldBeEqual(page.getBirthdateInput(), "Дата рождения:");
+//        page.formGroupLabelTextShouldBeEqual(page.getSelectLanguage(), "Уровень знания языка:");
+//    }
+
     //positive test
     @Test
-    public void registrationFormTest() throws InterruptedException {
+    public void submitUserPositiveTest() {
         RegistrationPage page = new RegistrationPage(driver);
         page.open();
-
-        SelectLanguage selectLang = new SelectLanguage(driver);
-        selectLang.initSelectLanguage(driver);
-        User user = new User("Anton", "Antonio_is_SanAntonio@gmail.com", "1", "1", "09-02-1994", selectLang);
 
         page.fillEveryInputForm(user);
 
         page.getSubmitButton().click();
-
-        page.outputMessageIsEqualToUser(user);
-
-        Thread.sleep(3000);
-
+        page.outputMessageShouldBeEqualToUser(user);
     }
 
-//    @Test
-//    public void registrationFormPositive() throws InterruptedException {
-//        RegistrationPage page = new RegistrationPage(driver);
-//        page.open();
-//
-//        User positiveUser = new User("Anton",
-//                                    "Antonio_is_SanAntonio@gmail.com",
-//                                    "1111",
-//                                "1111",
-//                                "09-02-1994",
-//                                        selectLang);
-//        page.fillEveryInputForm(positiveUser);
-//        Thread.sleep(3000);
-//
-//    }
 
     // testing all formGroups for required property
 //    @Test
@@ -69,8 +72,9 @@ public class OptionsFree_Test {
 //        RegistrationPage page = new RegistrationPage(driver);
 //        page.open();
 //
-//        page.formGroupShouldBeRequired();
+//        page.formGroupElementsShouldBeRequired();
 //    }
+
 
     @AfterEach
     public void driverClose(){
@@ -79,5 +83,14 @@ public class OptionsFree_Test {
             driver.quit();
         }
     }
+
+    @AfterAll
+    public static void driverBeforeAllClose(){
+        if (driverBeforeAll != null) {
+            driverBeforeAll.close();
+            driverBeforeAll.quit();
+        }
+    }
+
 
 }

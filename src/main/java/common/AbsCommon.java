@@ -15,4 +15,5 @@ public abstract class AbsCommon {
         waiter = new WebDriverWait(this.driver, Duration.ofSeconds(5));
 //        PageFactory.initElements(driver, this);
     }
+
 }

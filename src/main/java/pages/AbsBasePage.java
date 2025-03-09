@@ -11,7 +11,6 @@ public abstract class AbsBasePage extends AbsCommon {
     public AbsBasePage(WebDriver driver) {
         super(driver);
         this.path = System.getProperty("base.url");
-
     }
 
     private String getAddPath() {

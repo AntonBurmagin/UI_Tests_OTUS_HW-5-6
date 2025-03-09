@@ -1,22 +1,22 @@
 package pages;
 
 import annotations.Path;
-import components.SelectLanguage;
+import components.formgroups.FormGroup;
+import components.formgroups.InputFormGroup;
+import components.formgroups.SelectLanguageFormGroup;
 import data.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Path("")  ///  ИСПРАВИТЬ!!!!!!
+@Path("/form.html")
 public class RegistrationPage extends AbsBasePage{
     private static final Logger logger = LogManager.getLogger(RegistrationPage.class);
 
@@ -25,42 +25,33 @@ public class RegistrationPage extends AbsBasePage{
     }
 
     //Locators
-    @FindBy(id="email")
-    private WebElement email;
+//    @FindBy(id="email")
+//    private WebElement email;
 
-    private final By usernameInputId = By.id("username");
-    private final By emailInputId = By.id("email");
-    private final By passwordInputId = By.id("password");
-    private final By confirmPasswordInputId = By.id("confirm_password");
-    private final By birthdateInputId = By.id("birthdate");
+    private final By usernameFormGroupSelector = By.cssSelector(".form-group:has(#username)");
+    private final By emailFormGroupSelector = By.cssSelector(".form-group:has(#email)");
+    private final By passwordFormGroupSelector = By.cssSelector(".form-group:has(#password)");
+    private final By confirmPasswordFormGroupSelector = By.cssSelector(".form-group:has(#confirm_password)");
+    private final By birthdateFormGroupSelector = By.cssSelector(".form-group:has(#birthdate)");
     private final By languageLevelSelector = By.cssSelector("select#language_level");
     private final By languageLevelOptionsSelector = By.cssSelector("#language_level option");
     private final By formGroupSelector = By.cssSelector(".form-group input, select");
     private final By submitButtonSelector = By.cssSelector("input[type=\"submit\"]");
     private final By outputId = By.id("output");
 
-//    #language_level option[selected]
-//    #language_level option:not([disabled])
 
 
     //methods
-    public WebElement getUsernameInput(){
-        return driver.findElement(usernameInputId);
+    public InputFormGroup getInputFormGroup(By by) {
+        return new InputFormGroup(driver, by);
     }
 
-    public WebElement getOutput() {
-        return driver.findElement(outputId);
+    public InputFormGroup getUsernameInputFormGroup(){
+        return getInputFormGroup(usernameFormGroupSelector);
     }
 
-//    public List<String> getOutputMessage(){
-//        return List.of(getOutput().getText().split("\n"));
-//    }
 
-    public String getOutputMessage(){
-        return getOutput().getText();
-    }
-
-    public void outputMessageIsEqualToUser(User user){
+    public void outputMessageShouldBeEqualToUser(User user){
         String userDateBirthOutForm = String.join( "-", List.of(user.getBirthdate().split("-")).reversed());
 
         String expected = String.format("Имя пользователя: %s\n" +
@@ -76,52 +67,45 @@ public class RegistrationPage extends AbsBasePage{
         return driver.findElement(submitButtonSelector);
     }
 
-    public void fillTextInputElement(WebElement element, String value){
-        element.sendKeys(value);
+    public void fillTextInputElement(InputFormGroup inputForm, String value){
+        inputForm.setInputText(value);
     }
 
-    public WebElement getEmailInput(){
-        return driver.findElement(emailInputId);
+    public InputFormGroup getEmailInputFormGroup(){
+        return getInputFormGroup(emailFormGroupSelector);
     }
 
-    public void fillEmailInput(String emailIn){
-        email.sendKeys(emailIn);
+    public void fillEmailInputFormGroup(String emailIn){
+        getEmailInputFormGroup().setInputText(emailIn);
     }
 
-    public WebElement getPasswordInput(){
-        return driver.findElement(passwordInputId);
+    public InputFormGroup getPasswordInputFormGroup(){
+        return getInputFormGroup(passwordFormGroupSelector);
     }
 
     public void fillPasswordInput(String password){
-        getPasswordInput().sendKeys(password);
+        getPasswordInputFormGroup().setInputText(password);
     }
 
-    public WebElement getConfirmPasswordInput(){
-        return driver.findElement(confirmPasswordInputId);
+    public InputFormGroup getConfirmPasswordInputFormGroup(){
+        return getInputFormGroup(confirmPasswordFormGroupSelector);
     }
 
     public void fillConfirmPasswordInput(String confirmPass){
-        getConfirmPasswordInput().sendKeys(confirmPass);
+        getConfirmPasswordInputFormGroup().setInputText(confirmPass);
     }
 
-    public WebElement getBirthdateInput(){
-        return driver.findElement(birthdateInputId);
+    public InputFormGroup getBirthdateInput(){
+        return getInputFormGroup(birthdateFormGroupSelector);
     }
 
     public void fillBirthdateInput(String birthdate){
-        getBirthdateInput().sendKeys(birthdate);
+        getBirthdateInput().setInputText(birthdate);
     }
 
-    public WebElement getLanguageLevelSelect(){
-        return driver.findElement(languageLevelSelector);
-    }
 
-    public List<WebElement> getLanguageLevelSelectOptions(){
-        return driver.findElements(languageLevelOptionsSelector);
-    }
-
-    public SelectLanguage getSelectLanguage() {
-        return new SelectLanguage(driver);
+    public SelectLanguageFormGroup getSelectLanguage() {
+        return new SelectLanguageFormGroup(driver);
     }
 
     public void fillRandomSelectLanguage(){
@@ -132,7 +116,17 @@ public class RegistrationPage extends AbsBasePage{
         return driver.findElements(formGroupSelector);
     }
 
-    public void formGroupShouldBeRequired(){
+    public WebElement getOutput() {
+        return driver.findElement(outputId);
+    }
+
+    public String getOutputMessage(){
+        return getOutput().getText();
+    }
+
+
+
+    public void formGroupElementsShouldBeRequired(){
         List<WebElement> formGroupList = getFormGroupElements();
         assertThat(formGroupList.size()).isNotZero();
         for (WebElement el : formGroupList){
@@ -142,12 +136,16 @@ public class RegistrationPage extends AbsBasePage{
 
 
     public void fillEveryInputForm(User user) {
-        fillTextInputElement(getUsernameInput(), user.getName());
-        fillTextInputElement(getEmailInput(), user.getEmail());
-        fillTextInputElement(getPasswordInput(), user.getPass());
-        fillTextInputElement(getConfirmPasswordInput(), user.getConfirmPass());
+        fillTextInputElement(getUsernameInputFormGroup(), user.getName());
+        fillTextInputElement(getEmailInputFormGroup(), user.getEmail());
+        fillTextInputElement(getPasswordInputFormGroup(), user.getPass());
+        fillTextInputElement(getConfirmPasswordInputFormGroup(), user.getConfirmPass());
         fillTextInputElement(getBirthdateInput(), user.getBirthdate());
-        fillTextInputElement(getLanguageLevelSelect(), user.getLanguageLevelText());
+        getSelectLanguage().setOption(user.getLanguageLevel());
+    }
+
+    public void formGroupLabelTextShouldBeEqual(FormGroup formGroup, String expected) {
+        assertThat(formGroup.getLabelText()).isEqualTo(expected);
     }
 
 
