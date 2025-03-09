@@ -1,15 +1,17 @@
 package pages;
 
 import annotations.Path;
-import components.formgroups.FormGroup;
+import components.formgroups.AbsFormGroup;
 import components.formgroups.InputFormGroup;
 import components.formgroups.SelectLanguageFormGroup;
 import data.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
@@ -33,8 +35,6 @@ public class RegistrationPage extends AbsBasePage{
     private final By passwordFormGroupSelector = By.cssSelector(".form-group:has(#password)");
     private final By confirmPasswordFormGroupSelector = By.cssSelector(".form-group:has(#confirm_password)");
     private final By birthdateFormGroupSelector = By.cssSelector(".form-group:has(#birthdate)");
-    private final By languageLevelSelector = By.cssSelector("select#language_level");
-    private final By languageLevelOptionsSelector = By.cssSelector("#language_level option");
     private final By formGroupSelector = By.cssSelector(".form-group input, select");
     private final By submitButtonSelector = By.cssSelector("input[type=\"submit\"]");
     private final By outputId = By.id("output");
@@ -144,8 +144,20 @@ public class RegistrationPage extends AbsBasePage{
         getSelectLanguage().setOption(user.getLanguageLevel());
     }
 
-    public void formGroupLabelTextShouldBeEqual(FormGroup formGroup, String expected) {
+    public void formGroupLabelTextShouldBeEqual(AbsFormGroup formGroup, String expected) {
         assertThat(formGroup.getLabelText()).isEqualTo(expected);
+    }
+
+
+
+    public void alertTextShouldBeEqual(String expected) {
+        waiter.until(ExpectedConditions.alertIsPresent());
+        Alert alert = driver.switchTo().alert();
+        System.out.println(alert.getText());
+        assertThat(alert.getText()).isEqualTo(expected);
+        alert.dismiss();
+//        driver.switchTo().parentFrame();
+
     }
 
 

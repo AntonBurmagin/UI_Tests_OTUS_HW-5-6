@@ -3,7 +3,7 @@ package components.formgroups;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class InputFormGroup extends FormGroup{
+public class InputFormGroup extends AbsFormGroup {
 
     public InputFormGroup(WebDriver driver, By by) {
         super(driver, by);

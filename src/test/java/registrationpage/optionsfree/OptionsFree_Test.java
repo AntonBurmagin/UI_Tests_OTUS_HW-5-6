@@ -54,15 +54,35 @@ public class OptionsFree_Test {
 //    }
 
     //positive test
+//    @Test
+//    public void submitUserPositiveTest() {
+//        RegistrationPage page = new RegistrationPage(driver);
+//        page.open();
+//
+//        page.fillEveryInputForm(user);
+//
+//        page.getSubmitButton().click();
+//        page.outputMessageShouldBeEqualToUser(user);
+//    }
+
+    //different passwords test
     @Test
-    public void submitUserPositiveTest() {
+    public void submitUserDifferentPassTest() {
+        String expected = "Пароли не совпадают!";
         RegistrationPage page = new RegistrationPage(driver);
         page.open();
+        User diffPassUser = new User("Anton",
+                                    "Antonio_is_SanAntonio@gmail.com",
+                                    "1",
+                                    "2",
+                                    "09-02-1994",
+                                    selectLang);
 
-        page.fillEveryInputForm(user);
+        page.fillEveryInputForm(diffPassUser);
 
         page.getSubmitButton().click();
-        page.outputMessageShouldBeEqualToUser(user);
+        page.alertTextShouldBeEqual(expected);
+
     }
 
 
@@ -88,7 +108,7 @@ public class OptionsFree_Test {
     public static void driverBeforeAllClose(){
         if (driverBeforeAll != null) {
             driverBeforeAll.close();
-            driverBeforeAll.quit();
+//            driverBeforeAll.quit();
         }
     }
 

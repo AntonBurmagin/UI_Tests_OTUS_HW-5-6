@@ -1,7 +1,6 @@
 package components.formgroups;
 
 import annotations.Component;
-import components.AbsComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 @Component("id:::language_level")
-public class SelectLanguageFormGroup extends FormGroup {
+public class SelectLanguageFormGroup extends AbsFormGroup {
     private WebElement selectLanguage = null;
     private List<WebElement> options;
 
@@ -20,7 +19,7 @@ public class SelectLanguageFormGroup extends FormGroup {
         selectLanguage = driver.findElement(getComponentBy());
         options = selectLanguage.findElements(By.cssSelector("option:not([disabled])"));
     }
-    
+
 
     public void setOption(WebElement option){
         selectLanguage.sendKeys(option.getText());
