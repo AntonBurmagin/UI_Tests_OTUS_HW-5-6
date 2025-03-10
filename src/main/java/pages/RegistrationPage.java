@@ -12,6 +12,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import waiter.CustomWaiter;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Path("/form.html")
 public class RegistrationPage extends AbsBasePage{
     private static final Logger logger = LogManager.getLogger(RegistrationPage.class);
+    private final CustomWaiter waiter = new CustomWaiter(driver, logger);
 
     public RegistrationPage(WebDriver driver) {
         super(driver);
@@ -149,15 +151,18 @@ public class RegistrationPage extends AbsBasePage{
     }
 
 
+    public void alertShouldNotBePresent() {
+        assertTrue(waiter.waitForCondition(ExpectedConditions.not(ExpectedConditions.alertIsPresent())));
+    }
+
+    public void alertShouldBePresent() {
+        assertTrue(waiter.waitForCondition(ExpectedConditions.alertIsPresent()));
+    }
 
     public void alertTextShouldBeEqual(String expected) {
-        waiter.until(ExpectedConditions.alertIsPresent());
         Alert alert = driver.switchTo().alert();
-        System.out.println(alert.getText());
         assertThat(alert.getText()).isEqualTo(expected);
         alert.dismiss();
-//        driver.switchTo().parentFrame();
-
     }
 
 

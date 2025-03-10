@@ -80,9 +80,11 @@ public class OptionsFree_Test {
 
         page.fillEveryInputForm(diffPassUser);
 
+        page.alertShouldNotBePresent();
         page.getSubmitButton().click();
-        page.alertTextShouldBeEqual(expected);
+        page.alertShouldBePresent();
 
+        page.alertTextShouldBeEqual(expected);
     }
 
 
@@ -108,7 +110,7 @@ public class OptionsFree_Test {
     public static void driverBeforeAllClose(){
         if (driverBeforeAll != null) {
             driverBeforeAll.close();
-//            driverBeforeAll.quit();
+            driverBeforeAll.quit();
         }
     }
 
