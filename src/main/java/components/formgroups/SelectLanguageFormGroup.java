@@ -37,6 +37,10 @@ public class SelectLanguageFormGroup extends AbsFormGroup {
         return options.get(randomIndex);
     }
 
+    public WebElement getSelectLanguage(){
+        return selectLanguage;
+    }
+
 
 
 

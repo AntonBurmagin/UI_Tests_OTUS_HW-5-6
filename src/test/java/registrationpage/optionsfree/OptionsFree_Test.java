@@ -11,7 +11,7 @@ public class OptionsFree_Test {
     private static final WebDriverFactory webDriverFactory = new WebDriverFactory();
     private WebDriver driver = null;
     private static SelectLanguageFormGroup selectLang;
-    private static User user;
+    private static User userPositive;
     private static WebDriver driverBeforeAll;
 
 
@@ -27,7 +27,7 @@ public class OptionsFree_Test {
         page.open();
 
         selectLang = new SelectLanguageFormGroup(driverBeforeAll);
-        user = new User("Anton",
+        userPositive = new User("Anton",
                 "Antonio_is_SanAntonio@gmail.com",
                 "1",
                 "1",
@@ -40,32 +40,43 @@ public class OptionsFree_Test {
         driver = webDriverFactory.create();
     }
 
-//    @Test
-//    public void labelsTextTest(){
-//        RegistrationPage page = new RegistrationPage(driver);
-//        page.open();
-//
-//        page.formGroupLabelTextShouldBeEqual(page.getUsernameInputFormGroup(), "Имя пользователя:");
-//        page.formGroupLabelTextShouldBeEqual(page.getEmailInputFormGroup(), "Электронная почта:");
-//        page.formGroupLabelTextShouldBeEqual(page.getPasswordInputFormGroup(), "Пароль:");
-//        page.formGroupLabelTextShouldBeEqual(page.getConfirmPasswordInputFormGroup(), "Подтвердите пароль:");
-//        page.formGroupLabelTextShouldBeEqual(page.getBirthdateInput(), "Дата рождения:");
-//        page.formGroupLabelTextShouldBeEqual(page.getSelectLanguage(), "Уровень знания языка:");
-//    }
 
-    //positive test
-//    @Test
-//    public void submitUserPositiveTest() {
-//        RegistrationPage page = new RegistrationPage(driver);
-//        page.open();
-//
-//        page.fillEveryInputForm(user);
-//
-//        page.getSubmitButton().click();
-//        page.outputMessageShouldBeEqualToUser(user);
-//    }
+    @Test
+    public void labelsTextTest(){
+        RegistrationPage page = new RegistrationPage(driver);
+        page.open();
 
-    //different passwords test
+        page.formGroupLabelTextShouldBeEqual(page.getUsernameInputFormGroup(), "Имя пользователя:");
+        page.formGroupLabelTextShouldBeEqual(page.getEmailInputFormGroup(), "Электронная почта:");
+        page.formGroupLabelTextShouldBeEqual(page.getPasswordInputFormGroup(), "Пароль:");
+        page.formGroupLabelTextShouldBeEqual(page.getConfirmPasswordInputFormGroup(), "Подтвердите пароль:");
+        page.formGroupLabelTextShouldBeEqual(page.getBirthdateInput(), "Дата рождения:");
+        page.formGroupLabelTextShouldBeEqual(page.getSelectLanguageFormGroup(), "Уровень знания языка:");
+    }
+
+
+    @Test
+    public void formGroupsAreRequiredTest() {
+        RegistrationPage page = new RegistrationPage(driver);
+        page.open();
+
+        page.formGroupElementsShouldBeRequired();
+    }
+
+
+    @Test
+    public void submitUserPositiveTest() {
+        RegistrationPage page = new RegistrationPage(driver);
+        page.open();
+
+        page.fillEveryInputForm(userPositive);
+
+        page.getSubmitButton().click();
+        page.outputMessageShouldBeEqualToUser(userPositive);
+        System.out.println(page.getEmailInputFormGroup().getInputField().getDomProperty("validationMessage"));
+    }
+
+
     @Test
     public void submitUserDifferentPassTest() {
         String expected = "Пароли не совпадают!";
@@ -88,14 +99,55 @@ public class OptionsFree_Test {
     }
 
 
-    // testing all formGroups for required property
-//    @Test
-//    public void formGroupsAreRequired() {
-//        RegistrationPage page = new RegistrationPage(driver);
-//        page.open();
-//
-//        page.formGroupElementsShouldBeRequired();
-//    }
+    @Test
+    public void incorrectEmailFormatTest() {
+        RegistrationPage page = new RegistrationPage(driver);
+        page.open();
+
+        String expectedValidationMessage = "Часть адреса после символа \"@\" не должна содержать символ \"@\".";
+        User incorrectEmailUser = new User("Anton",
+                                    "Antonio_is_SanAntonio@gmail.com@",
+                                    "1",
+                                    "1",
+                                    "09-02-1994",
+                                    selectLang);
+
+        page.fillEveryInputForm(incorrectEmailUser);
+        page.getSubmitButton().click();
+
+        page.validationMessageShouldBe(page.getEmailInputFormGroup().getInputField(), expectedValidationMessage);
+    }
+
+
+    @Test
+    public void validationMessageRegularTest() {
+        RegistrationPage page = new RegistrationPage(driver);
+        page.open();
+
+        String expectedValidationMessageStartInput = "Заполните это поле.";
+        page.validationMessageShouldBe(page.getUsernameInputFormGroup().getInputField(), expectedValidationMessageStartInput);
+        page.validationMessageShouldBe(page.getEmailInputFormGroup().getInputField(), expectedValidationMessageStartInput);
+        page.validationMessageShouldBe(page.getPasswordInputFormGroup().getInputField(), expectedValidationMessageStartInput);
+        page.validationMessageShouldBe(page.getConfirmPasswordInputFormGroup().getInputField(), expectedValidationMessageStartInput);
+        page.validationMessageShouldBe(page.getBirthdateInput().getInputField(), expectedValidationMessageStartInput);
+
+        String expectedValidationMessageStartSelectLanguage = "Выберите один из пунктов списка.";
+        page.validationMessageShouldBe(page.getSelectLanguageFormGroup().getSelectLanguage(), expectedValidationMessageStartSelectLanguage);
+
+        page.fillEveryInputForm(userPositive);
+
+        String expectedValidationMessageCorrectData = "";
+
+        page.validationMessageShouldBe(page.getUsernameInputFormGroup().getInputField(), expectedValidationMessageCorrectData);
+        page.validationMessageShouldBe(page.getEmailInputFormGroup().getInputField(), expectedValidationMessageCorrectData);
+        page.validationMessageShouldBe(page.getPasswordInputFormGroup().getInputField(), expectedValidationMessageCorrectData);
+        page.validationMessageShouldBe(page.getConfirmPasswordInputFormGroup().getInputField(), expectedValidationMessageCorrectData);
+        page.validationMessageShouldBe(page.getBirthdateInput().getInputField(), expectedValidationMessageCorrectData);
+
+        page.validationMessageShouldBe(page.getSelectLanguageFormGroup().getSelectLanguage(), expectedValidationMessageCorrectData);
+    }
+
+
 
 
     @AfterEach
@@ -107,7 +159,7 @@ public class OptionsFree_Test {
     }
 
     @AfterAll
-    public static void driverBeforeAllClose(){
+    public static void driverAfterAllClose(){
         if (driverBeforeAll != null) {
             driverBeforeAll.close();
             driverBeforeAll.quit();

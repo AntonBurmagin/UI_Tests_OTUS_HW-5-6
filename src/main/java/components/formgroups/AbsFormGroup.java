@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public abstract class AbsFormGroup extends AbsComponent {
-    public WebElement formGroup;
+    protected WebElement formGroup;
 
     public AbsFormGroup(WebDriver driver, By by) {
         super(driver);
@@ -15,6 +15,10 @@ public abstract class AbsFormGroup extends AbsComponent {
 
     public String getLabelText() {
         return formGroup.findElement(By.cssSelector("label")).getText();
+    }
+
+    public String getDomProperty(String property) {
+        return formGroup.getDomProperty(property);
     }
 
 

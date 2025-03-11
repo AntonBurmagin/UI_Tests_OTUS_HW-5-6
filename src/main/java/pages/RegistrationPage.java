@@ -106,12 +106,12 @@ public class RegistrationPage extends AbsBasePage{
     }
 
 
-    public SelectLanguageFormGroup getSelectLanguage() {
+    public SelectLanguageFormGroup getSelectLanguageFormGroup() {
         return new SelectLanguageFormGroup(driver);
     }
 
     public void fillRandomSelectLanguage(){
-        getSelectLanguage().setRandomOption();
+        getSelectLanguageFormGroup().setRandomOption();
     }
 
     public List<WebElement> getFormGroupElements(){
@@ -143,7 +143,7 @@ public class RegistrationPage extends AbsBasePage{
         fillTextInputElement(getPasswordInputFormGroup(), user.getPass());
         fillTextInputElement(getConfirmPasswordInputFormGroup(), user.getConfirmPass());
         fillTextInputElement(getBirthdateInput(), user.getBirthdate());
-        getSelectLanguage().setOption(user.getLanguageLevel());
+        getSelectLanguageFormGroup().setOption(user.getLanguageLevel());
     }
 
     public void formGroupLabelTextShouldBeEqual(AbsFormGroup formGroup, String expected) {
@@ -163,6 +163,10 @@ public class RegistrationPage extends AbsBasePage{
         Alert alert = driver.switchTo().alert();
         assertThat(alert.getText()).isEqualTo(expected);
         alert.dismiss();
+    }
+
+    public void validationMessageShouldBe(WebElement element, String expected) {
+        assertTrue(waiter.waitForCondition(ExpectedConditions.domPropertyToBe(element, "validationMessage", expected)));
     }
 
 
