@@ -10,9 +10,6 @@ import pages.RegistrationPage;
 public class OptionsFree_Test {
     private static final WebDriverFactory webDriverFactory = new WebDriverFactory();
     private WebDriver driver = null;
-    private static SelectLanguageFormGroup selectLang;
-    private static User userPositive;
-    private static WebDriver driverBeforeAll;
 
 
     @BeforeAll
@@ -20,20 +17,6 @@ public class OptionsFree_Test {
         webDriverFactory.webDriverManagerSetup();
     }
 
-    @BeforeAll
-    public static void initFeatures() {
-        driverBeforeAll = webDriverFactory.create("--headless");
-        RegistrationPage page = new RegistrationPage(driverBeforeAll);
-        page.open();
-
-        selectLang = new SelectLanguageFormGroup(driverBeforeAll);
-        userPositive = new User("Anton",
-                "Antonio_is_SanAntonio@gmail.com",
-                "1",
-                "1",
-                "09-02-1994",
-                selectLang);
-    }
 
     @BeforeEach
     public void createDriver(){
@@ -69,6 +52,13 @@ public class OptionsFree_Test {
         RegistrationPage page = new RegistrationPage(driver);
         page.open();
 
+        User userPositive = new User("Anton",
+                "Antonio_is_SanAntonio@gmail.com",
+                "1",
+                "1",
+                "09-02-1994",
+                new SelectLanguageFormGroup(driver));
+
         page.fillEveryInputForm(userPositive);
 
         page.getSubmitButton().click();
@@ -87,7 +77,7 @@ public class OptionsFree_Test {
                                     "1",
                                     "2",
                                     "09-02-1994",
-                                    selectLang);
+                                    new SelectLanguageFormGroup(driver));
 
         page.fillEveryInputForm(diffPassUser);
 
@@ -110,7 +100,7 @@ public class OptionsFree_Test {
                                     "1",
                                     "1",
                                     "09-02-1994",
-                                    selectLang);
+                                    new SelectLanguageFormGroup(driver));
 
         page.fillEveryInputForm(incorrectEmailUser);
         page.getSubmitButton().click();
@@ -134,6 +124,12 @@ public class OptionsFree_Test {
         String expectedValidationMessageStartSelectLanguage = "Выберите один из пунктов списка.";
         page.validationMessageShouldBe(page.getSelectLanguageFormGroup().getSelectLanguage(), expectedValidationMessageStartSelectLanguage);
 
+        User userPositive = new User("Anton",
+                "Antonio_is_SanAntonio@gmail.com",
+                "1",
+                "1",
+                "09-02-1994",
+                new SelectLanguageFormGroup(driver));
         page.fillEveryInputForm(userPositive);
 
         String expectedValidationMessageCorrectData = "";
@@ -149,20 +145,11 @@ public class OptionsFree_Test {
 
 
 
-
     @AfterEach
     public void driverClose(){
         if (driver != null) {
             driver.close();
             driver.quit();
-        }
-    }
-
-    @AfterAll
-    public static void driverAfterAllClose(){
-        if (driverBeforeAll != null) {
-            driverBeforeAll.close();
-            driverBeforeAll.quit();
         }
     }
 

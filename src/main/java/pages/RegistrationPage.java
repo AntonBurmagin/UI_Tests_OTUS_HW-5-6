@@ -5,14 +5,11 @@ import components.formgroups.AbsFormGroup;
 import components.formgroups.InputFormGroup;
 import components.formgroups.SelectLanguageFormGroup;
 import data.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import waiter.CustomWaiter;
 
 import java.util.List;
 
@@ -21,8 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Path("/form.html")
 public class RegistrationPage extends AbsBasePage{
-    private static final Logger logger = LogManager.getLogger(RegistrationPage.class);
-    private final CustomWaiter waiter = new CustomWaiter(driver, logger);
+
 
     public RegistrationPage(WebDriver driver) {
         super(driver);
@@ -52,7 +48,6 @@ public class RegistrationPage extends AbsBasePage{
         return getInputFormGroup(usernameFormGroupSelector);
     }
 
-
     public void outputMessageShouldBeEqualToUser(User user){
         String userDateBirthOutForm = String.join( "-", List.of(user.getBirthdate().split("-")).reversed());
 
@@ -63,7 +58,6 @@ public class RegistrationPage extends AbsBasePage{
 
         assertThat(expected).isEqualTo(getOutputMessage());
     }
-
 
     public WebElement getSubmitButton(){
         return driver.findElement(submitButtonSelector);
@@ -77,41 +71,20 @@ public class RegistrationPage extends AbsBasePage{
         return getInputFormGroup(emailFormGroupSelector);
     }
 
-    public void fillEmailInputFormGroup(String emailIn){
-        getEmailInputFormGroup().setInputText(emailIn);
-    }
-
     public InputFormGroup getPasswordInputFormGroup(){
         return getInputFormGroup(passwordFormGroupSelector);
-    }
-
-    public void fillPasswordInput(String password){
-        getPasswordInputFormGroup().setInputText(password);
     }
 
     public InputFormGroup getConfirmPasswordInputFormGroup(){
         return getInputFormGroup(confirmPasswordFormGroupSelector);
     }
 
-    public void fillConfirmPasswordInput(String confirmPass){
-        getConfirmPasswordInputFormGroup().setInputText(confirmPass);
-    }
-
     public InputFormGroup getBirthdateInput(){
         return getInputFormGroup(birthdateFormGroupSelector);
     }
 
-    public void fillBirthdateInput(String birthdate){
-        getBirthdateInput().setInputText(birthdate);
-    }
-
-
     public SelectLanguageFormGroup getSelectLanguageFormGroup() {
         return new SelectLanguageFormGroup(driver);
-    }
-
-    public void fillRandomSelectLanguage(){
-        getSelectLanguageFormGroup().setRandomOption();
     }
 
     public List<WebElement> getFormGroupElements(){
@@ -136,7 +109,6 @@ public class RegistrationPage extends AbsBasePage{
         }
     }
 
-
     public void fillEveryInputForm(User user) {
         fillTextInputElement(getUsernameInputFormGroup(), user.getName());
         fillTextInputElement(getEmailInputFormGroup(), user.getEmail());
@@ -149,7 +121,6 @@ public class RegistrationPage extends AbsBasePage{
     public void formGroupLabelTextShouldBeEqual(AbsFormGroup formGroup, String expected) {
         assertThat(formGroup.getLabelText()).isEqualTo(expected);
     }
-
 
     public void alertShouldNotBePresent() {
         assertTrue(waiter.waitForCondition(ExpectedConditions.not(ExpectedConditions.alertIsPresent())));
@@ -168,11 +139,6 @@ public class RegistrationPage extends AbsBasePage{
     public void validationMessageShouldBe(WebElement element, String expected) {
         assertTrue(waiter.waitForCondition(ExpectedConditions.domPropertyToBe(element, "validationMessage", expected)));
     }
-
-
-
-
-
 
 
 }

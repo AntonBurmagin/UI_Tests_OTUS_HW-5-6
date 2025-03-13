@@ -6,7 +6,7 @@ import exceptions.ComponentByTypeNotFoundException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class AbsComponent extends AbsCommon {
+public abstract class AbsComponent extends AbsCommon {
 
     public AbsComponent(WebDriver driver) {
         super(driver);
